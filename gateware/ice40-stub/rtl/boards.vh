@@ -125,6 +125,20 @@
 		2'b00, 8'h28,	/* SR1 value */ \
 		2'b11, 8'h03	/* SR2 value */ \
 	}
+`elsif BOARD_BROT
+	// Lone Dynamics (Machdyne) Brot V4
+	`define HAS_USB
+	`define HAS_RGB
+	`define HAS_NO_BTN
+	`define RGB_DIM 3
+	`define RGB_MAP 12'h012		// 41=Red, 40=Green, 39=Blue
+	// Assumes W25Q80
+	`define FLASH_LOCK { \
+		2'b01, 8'h50,   /* WRITE_ENABLE_VOLTATILE */ \
+		2'b00, 8'h01,	/* WRITE_SR */ \
+		2'b00, 8'h30,	/* SR1 value */ \
+		2'b11, 8'h01	/* SR2 value */ \
+	}
 `endif
 
 // Defaults

@@ -62,6 +62,16 @@
 	`define PLL_DIVQ 3'b100
 	`define PLL_FILTER_RANGE 3'b010
 	`define HAS_1LED
+`elsif BOARD_BROT
+	// Lone Dynamics (Machdyne) Brot V4
+	`define PLL_PAD
+	`define PLL_CUSTOM
+	`define PLL_DIVR 4'b0000
+	`define PLL_DIVF 7'b0001111
+	`define PLL_DIVQ 3'b100
+	`define PLL_FILTER_RANGE 3'b100
+	`define HAS_RGB
+	`define HAS_NO_BTN
 `endif
 
 

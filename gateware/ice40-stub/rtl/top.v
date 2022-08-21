@@ -129,7 +129,11 @@ module top (
 		case (state)
 			ST_START:
 				// Check for immediate boot
+`ifdef HAS_NO_BTN
+				state_nxt = ST_FLASH_LOCK;
+`else
 				state_nxt = btn_v ? ST_FLASH_LOCK : ST_WAIT;
+`endif
 
 			ST_WAIT:
 				// Wait for first release
@@ -238,7 +242,11 @@ module top (
 	always @(posedge clk or posedge rst)
 	begin
 		if (rst)
+`ifdef HAS_NO_BTN
+			boot_sel <= 2'b01;	// DFU Image by default
+`else
 			boot_sel <= 2'b10;	// App 1 Image by default
+`endif
 		else if (state == ST_WAIT)
 			boot_sel <= 2'b01;	// DFU Image if in select mode
 		else if (state == ST_SEL)

@@ -21,6 +21,8 @@
 #include "utils.h"
 
 
+bool autoboot = true;
+
 extern const struct usb_stack_descriptors dfu_stack_desc;
 
 
@@ -102,6 +104,7 @@ usb_dfu_cb_flash_busy(void)
 void
 usb_dfu_cb_flash_erase(uint32_t addr, unsigned size)
 {
+	autoboot = false;
 	flash_write_enable();
 
 	switch (size) {
@@ -114,6 +117,7 @@ usb_dfu_cb_flash_erase(uint32_t addr, unsigned size)
 void
 usb_dfu_cb_flash_program(const void *data, uint32_t addr, unsigned size)
 {
+	autoboot = false;
 	flash_write_enable();
 	flash_page_program(data, addr, size);
 }
@@ -121,6 +125,7 @@ usb_dfu_cb_flash_program(const void *data, uint32_t addr, unsigned size)
 void
 usb_dfu_cb_flash_read(void *data, uint32_t addr, unsigned size)
 {
+	autoboot = false;
 	flash_read(data, addr, size);
 }
 
@@ -140,6 +145,8 @@ void main()
 {
 	bool bl_upgrade = false;
 	int cmd = 0;
+
+	int autoboot_ctr = 1000000;
 
 	/* Init console IO */
 	console_init();
@@ -184,6 +191,7 @@ void main()
 		cmd = getchar_nowait();
 
 		if (cmd >= 0) {
+			autoboot = false;
 			if (cmd > 32 && cmd < 127) {
 				putchar(cmd);
 				putchar('\r');
@@ -200,7 +208,10 @@ void main()
 			}
 		}
 
+		if (autoboot && --autoboot_ctr == 0) boot_app();
+
 		/* USB poll */
 		usb_poll();
+
 	}
 }
